@@ -1,5 +1,6 @@
 package hexlet.code.page_object;
 
+import hexlet.code.page_object.menupage.UsersPage;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,6 +15,9 @@ public class HomePage extends BasePage {
 
     @FindBy(css = "[class~='logout']")
     private WebElement logoutButton;
+
+    @FindBy(css = "[href*='users']")
+    private WebElement menuUsersButton;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -35,5 +39,15 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(logoutButton))
                 .click();
         return new LoginPage(driver);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public UsersPage openMenuUsers() {
+        wait.until(ExpectedConditions.elementToBeClickable(menuUsersButton))
+                .click();
+        wait.until(ExpectedConditions.attributeContains(menuUsersButton,
+                "class",
+                "RaMenuItemLink-active"));
+        return new UsersPage(driver);
     }
 }
