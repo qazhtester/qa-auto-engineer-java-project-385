@@ -1,4 +1,4 @@
-package hexlet.code;
+package hexlet.code.tests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +23,7 @@ public abstract class BaseTest {
     public void setupTest() {
         ChromeOptions options = new ChromeOptions();
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
     }
 
     @AfterEach
