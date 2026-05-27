@@ -13,7 +13,7 @@ public class LoginPageTest extends BaseTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open(BASE_URL);
 
-        HomePage homePage = loginPage.login("user123", "pass");
+        HomePage homePage = loginPage.login("user12312433", "pass124654");
         assertTrue(homePage.isUserLoggedIn(), "Пользователь не находится на главной странице");
     }
 }

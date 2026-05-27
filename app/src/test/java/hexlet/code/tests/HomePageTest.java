@@ -21,7 +21,7 @@ public class HomePageTest extends BaseTest {
         // Сначала входим
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open(BASE_URL);
-        HomePage homePage = loginPage.login("user", "pass");
+        HomePage homePage = loginPage.login("user4353", "pass8975");
 
         // Затем выходим
         LoginPage returnedLoginPage = homePage.logout();

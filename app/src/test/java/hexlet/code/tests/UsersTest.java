@@ -19,7 +19,7 @@ public class UsersTest extends BaseTest {
     public void loginAndGoToUsers() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open(BASE_URL);
-        HomePage homePage = loginPage.login("user23", "pass45");
+        HomePage homePage = loginPage.login("user23234", "pass45234");
         usersPage = homePage.openMenuUsers();
     }
 
@@ -104,9 +104,10 @@ public class UsersTest extends BaseTest {
         usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
         int countBefore = usersPage.getUsersCount();
 
-        // Удаляем пользователя
+        // Удалите одного или нескольких пользователей и подтвердите, что их больше нет в списке.
         usersPage.deleteLastUser();
         usersPage.verifySuccessRowDeleteMessage();
+
         assertFalse(usersPage.isUserExist(email, firstName, lastName),
                 "Пользователь не удалён");
         assertEquals(countBefore - 1, usersPage.getUsersCount(),
@@ -123,8 +124,10 @@ public class UsersTest extends BaseTest {
             String lastName = "Jordan";
             usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
         }
-
         int countBefore = usersPage.getUsersCount();
+
+        // Выделите всех пользователей целиком.
+        // Удалите выбранные записи и проверьте, что список очищен.
         usersPage.deleteAllUsers();
         usersPage.verifySuccessAllUsersDelete(countBefore);
     }

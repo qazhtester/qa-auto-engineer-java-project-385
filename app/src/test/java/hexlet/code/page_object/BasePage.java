@@ -1,7 +1,10 @@
 package hexlet.code.page_object;
 
+import hexlet.code.utils.Utils;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
@@ -13,5 +16,10 @@ public abstract class BasePage {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         PageFactory.initElements(driver, this);
+    }
+
+    protected void typeText(WebElement element, String text) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+        Utils.inputValue(element, text);
     }
 }
