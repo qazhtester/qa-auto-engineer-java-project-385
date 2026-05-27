@@ -13,6 +13,9 @@ import java.util.List;
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class UsersPage extends HomePage {
 
+    private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
+    private static final String ROW_CHECKBOX_CSS = "[type='checkbox']";
+
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement usersTable;
 
@@ -22,7 +25,7 @@ public class UsersPage extends HomePage {
     @FindBy(css = "[class~='RaDatagrid-tbody']")
     private WebElement tableBody;
 
-    @FindBy(css = "[class~='RaDatagrid-selectable']")
+    @FindBy(css = TABLE_ROWS_CSS)
     private List<WebElement> tableRows;
 
     @FindBy(css = "th[class~='column-email']")
@@ -37,6 +40,12 @@ public class UsersPage extends HomePage {
     @FindBy(css = "[href*='/users/create']")
     private WebElement createUserButton;
 
+    @FindBy(css = "[aria-label='Delete']")
+    private WebElement deleteButton;
+
+    @FindBy(css = ".MuiSnackbarContent-message")
+    private WebElement alert;
+
     public UsersPage(WebDriver driver) {
         super(driver);
     }
@@ -44,13 +53,18 @@ public class UsersPage extends HomePage {
     public void verifyUserTableVisible() {
         checkVisibility(usersTable, "Table");
         checkVisibility(tableHead, "Table Head");
-        checkVisibility(tableHead, "Table Body");
+        checkVisibility(tableBody, "Table Body");
     }
 
     public void verifyRequiredColumnsVisible() {
         checkVisibility(emailColumn, "Email column");
         checkVisibility(firstNameColumn, "First name column");
         checkVisibility(lastNameColumn, "Last name column");
+    }
+
+    public void verifySuccessDeleteMessage() {
+        wait.until(ExpectedConditions.visibilityOf(alert));
+        wait.until(ExpectedConditions.textToBePresentInElement(alert, "Element deleted"));
     }
 
     public int getUsersCount() {
@@ -81,10 +95,21 @@ public class UsersPage extends HomePage {
     }
 
     public UserFormPage openLastUser() {
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
         WebElement lastRow = tableRows.getLast();
         wait.until(ExpectedConditions.elementToBeClickable(lastRow))
                 .click();
         return new UserFormPage(driver);
+    }
+
+    public void deleteLastUser() {
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
+        WebElement lastRow = tableRows.getLast();
+        lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS))
+                .click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
+                .click();
     }
 
     private void checkVisibility(WebElement element, String elementName) {

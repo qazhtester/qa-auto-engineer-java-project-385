@@ -93,4 +93,23 @@ public class UsersTest extends BaseTest {
         userFormPage.verifyValidationErrorMessage("The form is not valid. Please check for errors",
                 "Incorrect email format");
     }
+
+    @Test
+    public void testDeleteUser() {
+        // Создаём нового пользователя
+        UserFormPage userFormPage = usersPage.openCreateUserForm();
+        String email = "max@example.com";
+        String firstName = "Max";
+        String lastName = "Jordan";
+        usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
+        int countBefore = usersPage.getUsersCount();
+
+        // Удаляем пользователя
+        usersPage.deleteLastUser();
+        usersPage.verifySuccessDeleteMessage();
+        assertFalse(usersPage.isUserExist(email, firstName, lastName),
+                "Пользователь не удалён");
+        assertEquals(countBefore - 1, usersPage.getUsersCount(),
+                "Количество пользователей не уменьшилось на 1");
+    }
 }
