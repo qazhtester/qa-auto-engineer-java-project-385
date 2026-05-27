@@ -1,6 +1,6 @@
 package hexlet.code.page_object;
 
-import hexlet.code.page_object.menupage.UsersPage;
+import hexlet.code.page_object.menu.users.UsersPage;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,16 +32,14 @@ public class HomePage extends BasePage {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     public LoginPage logout() {
-        wait.until(ExpectedConditions.visibilityOf(profileButton))
+        wait.until(ExpectedConditions.elementToBeClickable(profileButton))
                 .click();
-        wait.until(ExpectedConditions.visibilityOf(logoutButton))
+        wait.until(ExpectedConditions.elementToBeClickable(logoutButton))
                 .click();
         return new LoginPage(driver);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public UsersPage openMenuUsers() {
         wait.until(ExpectedConditions.elementToBeClickable(menuUsersButton))
                 .click();

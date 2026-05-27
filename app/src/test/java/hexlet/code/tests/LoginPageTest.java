@@ -14,7 +14,6 @@ public class LoginPageTest extends BaseTest {
         loginPage.open(BASE_URL);
 
         HomePage homePage = loginPage.login("user123", "pass");
-        assertTrue(homePage.isUserLoggedIn(), "Пользователь должен быть на главной странице после входа");
+        assertTrue(homePage.isUserLoggedIn(), "Пользователь не находится на главной странице");
     }
-
 }

@@ -26,6 +26,6 @@ public class HomePageTest extends BaseTest {
         // Затем выходим
         LoginPage returnedLoginPage = homePage.logout();
 
-        assertTrue(returnedLoginPage.isLoginPageDisplayed(), "Должна быть открыта страница входа");
+        assertTrue(returnedLoginPage.isLoginPageDisplayed(), "Страница входа не открыта");
     }
 }

@@ -42,5 +42,4 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.invisibilityOf(loginButton));
         return new HomePage(driver);
     }
-
 }
