@@ -106,10 +106,26 @@ public class UsersTest extends BaseTest {
 
         // Удаляем пользователя
         usersPage.deleteLastUser();
-        usersPage.verifySuccessDeleteMessage();
+        usersPage.verifySuccessRowDeleteMessage();
         assertFalse(usersPage.isUserExist(email, firstName, lastName),
                 "Пользователь не удалён");
         assertEquals(countBefore - 1, usersPage.getUsersCount(),
                 "Количество пользователей не уменьшилось на 1");
+    }
+
+    @Test
+    public void testDeleteAllUsers() {
+        // Убедимся, что есть хотя бы один пользователь
+        if (usersPage.getUsersCount() == 0) {
+            UserFormPage userFormPage = usersPage.openCreateUserForm();
+            String email = "max@example.com";
+            String firstName = "Max";
+            String lastName = "Jordan";
+            usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
+        }
+
+        int countBefore = usersPage.getUsersCount();
+        usersPage.deleteAllUsers();
+        usersPage.verifySuccessAllUsersDelete(countBefore);
     }
 }

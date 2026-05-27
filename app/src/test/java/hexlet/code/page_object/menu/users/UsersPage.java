@@ -14,7 +14,7 @@ import java.util.List;
 public class UsersPage extends HomePage {
 
     private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
-    private static final String ROW_CHECKBOX_CSS = "[type='checkbox']";
+    private static final String ROW_CHECKBOX_CSS = "tbody [type='checkbox']";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement usersTable;
@@ -40,11 +40,17 @@ public class UsersPage extends HomePage {
     @FindBy(css = "[href*='/users/create']")
     private WebElement createUserButton;
 
+    @FindBy(css = "[aria-label='Select all']")
+    private WebElement headCheckbox;
+
     @FindBy(css = "[aria-label='Delete']")
     private WebElement deleteButton;
 
     @FindBy(css = ".MuiSnackbarContent-message")
     private WebElement alert;
+
+    @FindBy(css = ".RaList-noResults")
+    private WebElement noResultsBlock;
 
     public UsersPage(WebDriver driver) {
         super(driver);
@@ -62,9 +68,22 @@ public class UsersPage extends HomePage {
         checkVisibility(lastNameColumn, "Last name column");
     }
 
-    public void verifySuccessDeleteMessage() {
+    public void verifySuccessRowDeleteMessage() {
         wait.until(ExpectedConditions.visibilityOf(alert));
         wait.until(ExpectedConditions.textToBePresentInElement(alert, "Element deleted"));
+    }
+
+    public void verifySuccessSomeDeleteMessage(int numberRows) {
+        checkVisibility(alert, "alert");
+        wait.until(ExpectedConditions.textToBePresentInElement(alert, numberRows + " elements deleted"));
+    }
+
+    public void verifySuccessAllUsersDelete(int numberRows) {
+        verifySuccessSomeDeleteMessage(numberRows);
+
+        checkVisibility(noResultsBlock, "noResultsBlock");
+        wait.until(ExpectedConditions.textToBePresentInElement(noResultsBlock, "No Users yet."));
+        wait.until(ExpectedConditions.textToBePresentInElement(noResultsBlock, "Do you want to add one?"));
     }
 
     public int getUsersCount() {
@@ -108,6 +127,14 @@ public class UsersPage extends HomePage {
         lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS))
                 .click();
 
+        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
+                .click();
+    }
+
+    public void deleteAllUsers() {
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
+
+        headCheckbox.click();
         wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
                 .click();
     }
