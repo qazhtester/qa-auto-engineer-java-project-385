@@ -2,6 +2,7 @@ package hexlet.code.page_object;
 
 import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
+import hexlet.code.page_object.menu.tasks.TasksPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -26,6 +27,9 @@ public class HomePage extends BasePage {
 
     @FindBy(css = "[href$='labels']")
     private WebElement menuLabelsButton;
+
+    @FindBy(css = "[href$='tasks']")
+    private WebElement menuTasksButton;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -73,5 +77,14 @@ public class HomePage extends BasePage {
                 "class",
                 "RaMenuItemLink-active"));
         return new LabelsPage(driver);
+    }
+
+    public TasksPage openMenuTasks() {
+        wait.until(ExpectedConditions.elementToBeClickable(menuTasksButton))
+                .click();
+        wait.until(ExpectedConditions.attributeContains(menuTasksButton,
+                "class",
+                "RaMenuItemLink-active"));
+        return new TasksPage(driver);
     }
 }

@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 public class Utils {
 
+    // В данном приложении без Robot значения установить невозможно. React возвращает всё к первоначальному значению.
     public static void inputValue(WebElement element, String inputText) {
         try {
             Robot robot = new Robot();
