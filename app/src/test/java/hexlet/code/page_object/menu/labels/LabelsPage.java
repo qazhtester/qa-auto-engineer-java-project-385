@@ -2,6 +2,7 @@ package hexlet.code.page_object.menu.labels;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -71,14 +72,20 @@ public class LabelsPage extends HomePage {
     }
 
     public boolean isLabelExist(String name) {
-        wait.until(ExpectedConditions.visibilityOf(labelsTable));
-        return tableRows.stream().anyMatch(row -> {
-            // ищем ячейки внутри строки row
-            List<WebElement> nameCells = row.findElements(By.cssSelector("td.column-name"));
+        try {
+            return wait.until(driver -> {
+                // ищем ячейки внутри строки row
+                List<WebElement> rows = driver.findElements(By.cssSelector(TABLE_ROWS_CSS));
 
-            // проверяем, что текст совпадает
-            return !nameCells.isEmpty() && nameCells.getFirst().getText().trim().equals(name);
-        });
+                // проверяем, что текст совпадает
+                return rows.stream().anyMatch(row -> {
+                    List<WebElement> nameCells = row.findElements(By.cssSelector("td.column-name"));
+                    return !nameCells.isEmpty() && nameCells.getFirst().getText().trim().equals(name);
+                });
+            });
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
     public LabelFormPage openCreateLabelForm() {

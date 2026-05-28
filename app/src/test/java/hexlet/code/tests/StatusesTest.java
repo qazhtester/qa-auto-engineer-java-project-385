@@ -1,7 +1,6 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.LoginPage;
 import hexlet.code.page_object.menu.statuses.StatusFormPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +16,7 @@ public class StatusesTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToStatuses() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open(BASE_URL);
-        HomePage homePage = loginPage.login("user382", "pass84567");
+        HomePage homePage = performLogin();
         statusesPage = homePage.openMenuTaskStatuses();
     }
 
@@ -54,13 +51,12 @@ public class StatusesTest extends BaseTest {
     @Test
     public void testEditStatus() {
         // Создаём новый статус
-        StatusFormPage statusForm = statusesPage.openCreateStatusForm();
         String initialName = "New";
         String initialSlug = "new";
-        statusesPage = statusForm.createStatusAndGoToList(initialName, initialSlug);
+        createStatus(initialName, initialSlug);
 
         // Откройте форму редактирования, измените данные и убедитесь, что обновления сохранены.
-        statusForm = statusesPage.openLastStatus();
+        StatusFormPage statusForm = statusesPage.openLastStatus();
 
         String newName = "Updated";
         String newSlug = "updated";
@@ -77,13 +73,12 @@ public class StatusesTest extends BaseTest {
     @Test
     public void testDeleteStatus() {
         // Создаём новый статус
-        StatusFormPage statusForm = statusesPage.openCreateStatusForm();
         String name = "To Delete";
         String slug = "to_delete";
-        statusesPage = statusForm.createStatusAndGoToList(name, slug);
-        int countBefore = statusesPage.getStatusesCount();
+        createStatus(name, slug);
 
         // Удалите один или несколько статусов и проверьте, что они исчезли из списка.
+        int countBefore = statusesPage.getStatusesCount();
         statusesPage.deleteLastStatus();
         statusesPage.verifySuccessRowDeleteMessage();
 
@@ -97,15 +92,17 @@ public class StatusesTest extends BaseTest {
     public void testDeleteAllStatuses() {
         // Убедимся, что есть хотя бы один пользователь
         if (statusesPage.getStatusesCount() == 0) {
-            StatusFormPage statusForm = statusesPage.openCreateStatusForm();
-            String name = "All Delete";
-            String slug = "all_delete";
-            statusesPage = statusForm.createStatusAndGoToList(name, slug);
+            createStatus("All Delete", "all_delete");
         }
-        int countBefore = statusesPage.getStatusesCount();
 
         // Выделите все статусы и выполните групповое удаление, затем убедитесь, что список пуст.
+        int countBefore = statusesPage.getStatusesCount();
         statusesPage.deleteAllStatuses();
         statusesPage.verifySuccessAllStatusesDelete(countBefore);
+    }
+
+    private void createStatus(String name, String slug) {
+        StatusFormPage form = statusesPage.openCreateStatusForm();
+        statusesPage = form.createStatusAndGoToList(name, slug);
     }
 }

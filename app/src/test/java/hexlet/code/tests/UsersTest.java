@@ -1,7 +1,6 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.LoginPage;
 import hexlet.code.page_object.menu.users.UserFormPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +16,7 @@ public class UsersTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToUsers() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open(BASE_URL);
-        HomePage homePage = loginPage.login("user23234", "pass45234");
+        HomePage homePage = performLogin();
         usersPage = homePage.openMenuUsers();
     }
 
@@ -55,14 +52,13 @@ public class UsersTest extends BaseTest {
     @Test
     public void testEditUser() {
         // Создаём нового пользователя
-        UserFormPage userFormPage = usersPage.openCreateUserForm();
         String initialEmail = "kate@example.com";
         String initialFirstName = "Kate";
         String initialLastName = "Brown";
-        usersPage = userFormPage.createUserAndGoToList(initialEmail, initialFirstName, initialLastName);
+        createUser(initialEmail, initialFirstName, initialLastName);
 
         // Откройте форму редактирования и убедитесь, что данные подставляются верно.
-        userFormPage = usersPage.openLastUser();
+        UserFormPage userFormPage = usersPage.openLastUser();
 
         assertEquals(initialEmail, userFormPage.getEmailValue(),
                 "Email из таблицы не совпадает с Email из формы редактирования");
@@ -85,26 +81,33 @@ public class UsersTest extends BaseTest {
                 "После редактирования у пользователя отображаются начальные значения: " + initialEmail + ", "
                         + initialFirstName + ", "
                         + initialLastName);
+    }
+
+    @Test
+    public void testEmailValidationOnEdit() {
+        // Создаём пользователя, чтобы открыть форму редактирования
+        createUser("test@example.com", "Test", "User");
 
         // Дополнительно проверьте валидацию, в частности формат email.
-        userFormPage = usersPage.openLastUser();
+        UserFormPage userFormPage = usersPage.openLastUser();
         userFormPage.enterEmail("efd");
         userFormPage.clickSave();
-        userFormPage.verifyValidationErrorMessage("The form is not valid. Please check for errors",
-                "Incorrect email format");
+        userFormPage.verifyValidationErrorMessage(
+                "The form is not valid. Please check for errors",
+                "Incorrect email format"
+        );
     }
 
     @Test
     public void testDeleteUser() {
         // Создаём нового пользователя
-        UserFormPage userFormPage = usersPage.openCreateUserForm();
         String email = "max@example.com";
         String firstName = "Max";
         String lastName = "Jordan";
-        usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
-        int countBefore = usersPage.getUsersCount();
+        createUser(email, firstName, lastName);
 
         // Удалите одного или нескольких пользователей и подтвердите, что их больше нет в списке.
+        int countBefore = usersPage.getUsersCount();
         usersPage.deleteLastUser();
         usersPage.verifySuccessRowDeleteMessage();
 
@@ -118,11 +121,7 @@ public class UsersTest extends BaseTest {
     public void testDeleteAllUsers() {
         // Убедимся, что есть хотя бы один пользователь
         if (usersPage.getUsersCount() == 0) {
-            UserFormPage userFormPage = usersPage.openCreateUserForm();
-            String email = "max@example.com";
-            String firstName = "Max";
-            String lastName = "Jordan";
-            usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
+            createUser("max@example.com", "Max", "Jordan");
         }
         int countBefore = usersPage.getUsersCount();
 
@@ -130,5 +129,10 @@ public class UsersTest extends BaseTest {
         // Удалите выбранные записи и проверьте, что список очищен.
         usersPage.deleteAllUsers();
         usersPage.verifySuccessAllUsersDelete(countBefore);
+    }
+
+    private void createUser(String email, String firstName, String lastName) {
+        UserFormPage form = usersPage.openCreateUserForm();
+        usersPage = form.createUserAndGoToList(email, firstName, lastName);
     }
 }

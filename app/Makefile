@@ -5,6 +5,3 @@ start-docker-app:
 
 test:
 	@gradlew clean test
-
-checkstyle:
-	@gradlew checkstyleMain checkstyleTest

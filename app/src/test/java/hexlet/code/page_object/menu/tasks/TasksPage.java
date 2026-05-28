@@ -2,6 +2,7 @@ package hexlet.code.page_object.menu.tasks;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,7 +18,7 @@ public class TasksPage extends HomePage {
     private static final String CARD = "[data-rfd-draggable-id]";
     private static final String CARD_TITLE = ".MuiTypography-h5";
     private static final String COLUMN_HEADER = "h6";
-    private static final String EDIT_BUTTON= "a[aria-label='Edit']";
+    private static final String EDIT_BUTTON = "a[aria-label='Edit']";
     private static final String FILTER = "[role='combobox']";
     private static final String LIST_FILTER = "[role='listbox']";
     private static final String OPTION_FILTER = "[role='option']";
@@ -36,7 +37,11 @@ public class TasksPage extends HomePage {
     }
 
     public boolean isTaskPresent(String taskName) {
-        return getAllTaskNames().contains(taskName);
+        try {
+            return wait.until(driver -> getAllTaskNames().contains(taskName));
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
     public String getColumnContainingCard(String taskName) {

@@ -2,6 +2,7 @@ package hexlet.code.page_object.menu.users;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -91,18 +92,24 @@ public class UsersPage extends HomePage {
     }
 
     public boolean isUserExist(String email, String firstName, String lastName) {
-        wait.until(ExpectedConditions.visibilityOf(usersTable));
-        return tableRows.stream().anyMatch(row -> {
-            // ищем ячейки внутри строки row
-            List<WebElement> emailCells = row.findElements(By.cssSelector("td.column-email"));
-            List<WebElement> firstNameCells = row.findElements(By.cssSelector("td.column-firstName"));
-            List<WebElement> lastNameCells = row.findElements(By.cssSelector("td.column-lastName"));
+        try {
+            return wait.until(driver -> {
+                List<WebElement> rows = driver.findElements(By.cssSelector(TABLE_ROWS_CSS));
+                return rows.stream().anyMatch(row -> {
+                    // ищем ячейки внутри строки row
+                    List<WebElement> emailCells = row.findElements(By.cssSelector("td.column-email"));
+                    List<WebElement> firstNameCells = row.findElements(By.cssSelector("td.column-firstName"));
+                    List<WebElement> lastNameCells = row.findElements(By.cssSelector("td.column-lastName"));
 
-            // проверяем, что все три ячейки найдены и их текст совпадает
-            return !emailCells.isEmpty() && emailCells.getFirst().getText().trim().equals(email)
-                    && !firstNameCells.isEmpty() && firstNameCells.getFirst().getText().trim().equals(firstName)
-                    && !lastNameCells.isEmpty() && lastNameCells.getFirst().getText().trim().equals(lastName);
-        });
+                    // проверяем, что все три ячейки найдены и их текст совпадает
+                    return !emailCells.isEmpty() && emailCells.getFirst().getText().trim().equals(email)
+                            && !firstNameCells.isEmpty() && firstNameCells.getFirst().getText().trim().equals(firstName)
+                            && !lastNameCells.isEmpty() && lastNameCells.getFirst().getText().trim().equals(lastName);
+                });
+            });
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
     public UserFormPage openCreateUserForm() {

@@ -2,6 +2,7 @@ package hexlet.code.page_object.menu.statuses;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -90,16 +91,22 @@ public class TaskStatusesPage extends HomePage {
     }
 
     public boolean isStatusExist(String name, String slug) {
-        wait.until(ExpectedConditions.visibilityOf(statusesTable));
-        return tableRows.stream().anyMatch(row -> {
-            // ищем ячейки внутри строки row
-            List<WebElement> nameCells = row.findElements(By.cssSelector("td.column-name"));
-            List<WebElement> slugCells = row.findElements(By.cssSelector("td.column-slug"));
+        try {
+            return wait.until(driver -> {
+                List<WebElement> rows = driver.findElements(By.cssSelector(TABLE_ROWS_CSS));
+                return rows.stream().anyMatch(row -> {
+                    // ищем ячейки внутри строки row
+                    List<WebElement> nameCells = row.findElements(By.cssSelector("td.column-name"));
+                    List<WebElement> slugCells = row.findElements(By.cssSelector("td.column-slug"));
 
-            // проверяем, что все три ячейки найдены и их текст совпадает
-            return !nameCells.isEmpty() && nameCells.getFirst().getText().trim().equals(name)
-                    && !slugCells.isEmpty() && slugCells.getFirst().getText().trim().equals(slug);
-        });
+                    // проверяем, что все три ячейки найдены и их текст совпадает
+                    return !nameCells.isEmpty() && nameCells.getFirst().getText().trim().equals(name)
+                            && !slugCells.isEmpty() && slugCells.getFirst().getText().trim().equals(slug);
+                });
+            });
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
     public StatusFormPage openCreateStatusForm() {

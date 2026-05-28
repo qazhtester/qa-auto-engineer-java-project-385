@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 
-public class Utils {
+public class InputHelper {
 
     // В данном приложении без Robot значения установить невозможно. React возвращает всё к первоначальному значению.
     public static void inputValue(WebElement element, String inputText) {

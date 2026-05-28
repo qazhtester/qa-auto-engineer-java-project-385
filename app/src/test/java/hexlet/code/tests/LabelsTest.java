@@ -1,7 +1,6 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.LoginPage;
 import hexlet.code.page_object.menu.labels.LabelFormPage;
 import hexlet.code.page_object.menu.labels.LabelsPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +14,7 @@ public class LabelsTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToLabels() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open(BASE_URL);
-        HomePage homePage = loginPage.login("user382", "pass84567");
+        HomePage homePage = performLogin();
         labelsPage = homePage.openMenuLabels();
     }
 
@@ -49,12 +46,11 @@ public class LabelsTest extends BaseTest {
     @Test
     public void testEditLabel() {
         // Создаём новую метку
-        LabelFormPage form = labelsPage.openCreateLabelForm();
         String initialName = "new";
-        labelsPage = form.createLabelAndGoToList(initialName);
+        createLabel(initialName);
 
         // Измените существующую метку и подтвердите, что обновления сохранены.
-        form = labelsPage.openLastLabel();
+        LabelFormPage form = labelsPage.openLastLabel();
         String newName = "update";
         labelsPage = form.editLabelAndGoToList(newName);
 
@@ -67,12 +63,11 @@ public class LabelsTest extends BaseTest {
     @Test
     public void testDeleteLabel() {
         // Создаём новую метку
-        LabelFormPage form = labelsPage.openCreateLabelForm();
         String name = "ToDelete";
-        labelsPage = form.createLabelAndGoToList(name);
-        int countBefore = labelsPage.getLabelsCount();
+        createLabel(name);
 
         // Удалите одну или несколько меток и убедитесь, что они исчезли из списка.
+        int countBefore = labelsPage.getLabelsCount();
         labelsPage.deleteLastLabel();
         labelsPage.verifySuccessRowDeleteMessage();
 
@@ -80,5 +75,10 @@ public class LabelsTest extends BaseTest {
                 "Метка не удалена");
         assertEquals(countBefore - 1, labelsPage.getLabelsCount(),
                 "Количество статусов не уменьшилось на 1");
+    }
+
+    private void createLabel(String name) {
+        LabelFormPage form = labelsPage.openCreateLabelForm();
+        labelsPage = form.createLabelAndGoToList(name);
     }
 }

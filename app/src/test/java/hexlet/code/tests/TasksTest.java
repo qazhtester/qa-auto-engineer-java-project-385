@@ -1,7 +1,6 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.LoginPage;
 import hexlet.code.page_object.menu.tasks.TaskFormPage;
 import hexlet.code.page_object.menu.tasks.TasksPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +16,7 @@ public class TasksTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToTasks() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open(BASE_URL);
-        HomePage homePage = loginPage.login("user234", "pass74584");
+        HomePage homePage = performLogin();
         tasksPage = homePage.openMenuTasks();
     }
 
@@ -84,14 +81,13 @@ public class TasksTest extends BaseTest {
     @Test
     public void testEditTask() {
         // Создаём новую задачу
-        TaskFormPage form = tasksPage.openCreateTaskForm();
         String initialAssignee = "michael@example.com";
         String initialTitle = "Edit Me";
         String initialStatus = "Published";
-        tasksPage = form.createTaskAndGoToBoard(initialAssignee, initialTitle, initialStatus);
+        createTask(initialAssignee, initialTitle, initialStatus);
 
         // Обновите данные существующей задачи и подтвердите, что изменения сохранены и отображаются.
-        form = tasksPage.openEditTaskByName(initialTitle);
+        TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
         String newAssignee = "sarah@example.com";
         String newTitle = "Update Task";
         tasksPage = form.editTaskAndGoToBoard(newAssignee, newTitle);
@@ -105,14 +101,13 @@ public class TasksTest extends BaseTest {
     @Test
     public void testMoveTaskBetweenColumns() {
         // Создаём новую задачу
-        TaskFormPage form = tasksPage.openCreateTaskForm();
         String initialAssignee = "michael@example.com";
         String initialTitle = "Edit Me";
         String initialStatus = "Published";
-        tasksPage = form.createTaskAndGoToBoard(initialAssignee, initialTitle, initialStatus);
+        createTask(initialAssignee, initialTitle, initialStatus);
 
         // Перетащите карточку в другой статус или используйте встроенные действия, затем проверьте, что отображаемый статус обновился.
-        form = tasksPage.openEditTaskByName(initialTitle);
+        TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
         String newStatus = "To Be Fixed";
         tasksPage = form.editStatusAndGoToBoard(newStatus);
 
@@ -123,15 +118,14 @@ public class TasksTest extends BaseTest {
     @Test
     public void testDeleteTask() {
         // Создаём задачу
-        TaskFormPage form = tasksPage.openCreateTaskForm();
         String assignee = "michael@example.com";
         String title = "Delete Me";
         String status = "Published";
-        tasksPage = form.createTaskAndGoToBoard(assignee, title, status);
-        int countBefore = tasksPage.getAllTaskNames().size();
+        createTask(assignee, title, status);
 
         // Удалите задачу и убедитесь, что она исчезла из списка и с доски.
-        form = tasksPage.openEditTaskByName(title);
+        int countBefore = tasksPage.getAllTaskNames().size();
+        TaskFormPage form = tasksPage.openEditTaskByName(title);
         tasksPage = form.deleteAndGoToBoard();
         tasksPage.verifySuccessDeleteMessage();
 
@@ -139,5 +133,10 @@ public class TasksTest extends BaseTest {
                 "Количество карточек не уменьшилось на 1");
         assertFalse(tasksPage.isTaskPresent(title),
                 "Отображается удалённая задача " + title);
+    }
+
+    private void createTask(String assignee, String title, String status) {
+        TaskFormPage form = tasksPage.openCreateTaskForm();
+        tasksPage = form.createTaskAndGoToBoard(assignee, title, status);
     }
 }
