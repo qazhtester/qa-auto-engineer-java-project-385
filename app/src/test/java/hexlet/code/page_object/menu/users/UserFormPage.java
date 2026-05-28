@@ -2,7 +2,6 @@ package hexlet.code.page_object.menu.users;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -46,8 +45,8 @@ public class UserFormPage extends HomePage {
     }
 
     public void clickSave() {
-        wait.until(ExpectedConditions.elementToBeClickable(saveButton));
-        saveButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(saveButton))
+                .click();
     }
 
     public String getEmailValue() {
@@ -98,13 +97,5 @@ public class UserFormPage extends HomePage {
         clickSave();
         verifySuccessEditMessage();
         return new UsersPage(driver);
-    }
-
-    private void checkVisibility(WebElement element, String elementName) {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(element));
-        } catch (TimeoutException e) {
-            throw new RuntimeException("Form element was not visible: " + elementName, e);
-        }
     }
 }

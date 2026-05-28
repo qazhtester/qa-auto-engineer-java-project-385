@@ -1,4 +1,4 @@
-package hexlet.code.page_object.menu.statuses;
+package hexlet.code.page_object.menu.labels;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
@@ -8,20 +8,17 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @SuppressWarnings("unused")
-public class StatusFormPage extends HomePage {
+public class LabelFormPage extends HomePage {
 
     private static final String ALERT = ".MuiSnackbarContent-message";
 
     @FindBy(css = "input[name='name']")
     private WebElement nameInput;
 
-    @FindBy(css = "input[name='slug']")
-    private WebElement slugInput;
-
     @FindBy(css = "button[type='submit']")
     private WebElement saveButton;
 
-    public StatusFormPage(WebDriver driver) {
+    public LabelFormPage(WebDriver driver) {
         super(driver);
     }
 
@@ -29,18 +26,8 @@ public class StatusFormPage extends HomePage {
         typeText(nameInput, name);
     }
 
-    public void fillSlug(String slug) {
-        typeText(slugInput, slug);
-    }
-
-    public void clickSave() {
-        wait.until(ExpectedConditions.elementToBeClickable(saveButton))
-                .click();
-    }
-
     public void verifyFormElementsVisible() {
         checkVisibility(nameInput, "Name");
-        checkVisibility(slugInput, "Slug");
         checkVisibility(saveButton, "Save");
     }
 
@@ -56,19 +43,22 @@ public class StatusFormPage extends HomePage {
                 By.cssSelector(ALERT), "Element updated"));
     }
 
-    public TaskStatusesPage createStatusAndGoToList(String name, String slug) {
-        fillName(name);
-        fillSlug(slug);
-        clickSave();
-        verifySuccessCreateMessage();
-        return openMenuTaskStatuses();
+    public void clickSave() {
+        wait.until(ExpectedConditions.elementToBeClickable(saveButton))
+                .click();
     }
 
-    public TaskStatusesPage editStatusAndGoToList(String newName, String newSlug) {
+    public LabelsPage createLabelAndGoToList(String name) {
+        fillName(name);
+        clickSave();
+        verifySuccessCreateMessage();
+        return openMenuLabels();
+    }
+
+    public LabelsPage editLabelAndGoToList(String newName) {
         fillName(newName);
-        fillSlug(newSlug);
         clickSave();
         verifySuccessEditMessage();
-        return new TaskStatusesPage(driver);
+        return new LabelsPage(driver);
     }
 }

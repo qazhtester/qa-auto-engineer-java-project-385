@@ -2,7 +2,6 @@ package hexlet.code.page_object.menu.statuses;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -133,13 +132,5 @@ public class TaskStatusesPage extends HomePage {
         headCheckbox.click();
         wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
                 .click();
-    }
-
-    private void checkVisibility(WebElement element, String elementName) {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(element));
-        } catch (TimeoutException e) {
-            throw new RuntimeException("Element not visible: " + elementName, e);
-        }
     }
 }

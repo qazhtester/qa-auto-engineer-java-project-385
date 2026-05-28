@@ -1,5 +1,6 @@
 package hexlet.code.page_object;
 
+import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import org.openqa.selenium.TimeoutException;
@@ -17,11 +18,14 @@ public class HomePage extends BasePage {
     @FindBy(css = "[class~='logout']")
     private WebElement logoutButton;
 
-    @FindBy(css = "[href*='users']")
+    @FindBy(css = "[href$='users']")
     private WebElement menuUsersButton;
 
-    @FindBy(css = "[href*='task_statuses']")
+    @FindBy(css = "[href$='task_statuses']")
     private WebElement menuTaskStatusesButton;
+
+    @FindBy(css = "[href$='labels']")
+    private WebElement menuLabelsButton;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -60,5 +64,14 @@ public class HomePage extends BasePage {
                 "class",
                 "RaMenuItemLink-active"));
         return new TaskStatusesPage(driver);
+    }
+
+    public LabelsPage openMenuLabels() {
+        wait.until(ExpectedConditions.elementToBeClickable(menuLabelsButton))
+                .click();
+        wait.until(ExpectedConditions.attributeContains(menuLabelsButton,
+                "class",
+                "RaMenuItemLink-active"));
+        return new LabelsPage(driver);
     }
 }
