@@ -1,0 +1,1 @@
+rootProject.name = "qa-auto-engineer-java-project-385"
