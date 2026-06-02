@@ -30,6 +30,7 @@ public abstract class BaseTest {
     @BeforeEach
     public void setupTest() {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
