@@ -31,6 +31,7 @@ public abstract class BaseTest {
     public void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
