@@ -11,26 +11,26 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 public abstract class BaseTest {
-    protected static String BASE_URL;
-    protected static String TEST_LOGIN;
-    protected static String TEST_PASSWORD;
+    protected static String baseUrl;
+    protected static String testLogin;
+    protected static String testPassword;
     protected WebDriver driver;
 
     @BeforeAll
     public static void setupClass() {
-        BASE_URL = System.getenv("APP_BASE_URL");
-        if (BASE_URL == null || BASE_URL.isEmpty()) {
-            BASE_URL = "http://localhost:5173/";
+        baseUrl = System.getenv("APP_BASE_URL");
+        if (baseUrl == null || baseUrl.isEmpty()) {
+            baseUrl = "http://localhost:5173/";
         }
 
-        TEST_LOGIN = TestDataGenerator.randomLogin();
-        TEST_PASSWORD = TestDataGenerator.randomPassword();
+        testLogin = TestDataGenerator.randomLogin();
+        testPassword = TestDataGenerator.randomPassword();
     }
 
     @BeforeEach
     public void setupTest() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox", "--headless");
+        options.addArguments("--nо-sandbox", "--headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
@@ -44,7 +44,7 @@ public abstract class BaseTest {
 
     protected HomePage performLogin() {
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.open(BASE_URL);
-        return loginPage.login(TEST_LOGIN, TEST_PASSWORD);
+        loginPage.open(baseUrl);
+        return loginPage.login(testLogin, testPassword);
     }
 }

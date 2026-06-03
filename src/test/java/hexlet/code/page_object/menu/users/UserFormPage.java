@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @SuppressWarnings("unused")
 public class UserFormPage extends HomePage {
 
+    private static final String ATTRIBUTE_VALUE = "value";
     private static final String ALERT = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[name='email']")
@@ -50,15 +51,15 @@ public class UserFormPage extends HomePage {
     }
 
     public String getEmailValue() {
-        return emailInput.getAttribute("value");
+        return emailInput.getAttribute(ATTRIBUTE_VALUE);
     }
 
     public String getFirstNameValue() {
-        return firstNameInput.getAttribute("value");
+        return firstNameInput.getAttribute(ATTRIBUTE_VALUE);
     }
 
     public String getLastNameValue() {
-        return lastNameInput.getAttribute("value");
+        return lastNameInput.getAttribute(ATTRIBUTE_VALUE);
     }
 
     public void enterEmail(String email) {

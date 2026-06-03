@@ -13,6 +13,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @SuppressWarnings("unused")
 public class HomePage extends BasePage {
 
+    private static final String ATTRIBUTE_CLASS = "class";
+    private static final String ACTIVE_MENU_ITEM_CLASS = "RaMenuItemLink-active";
+
     @FindBy(css = "[class~='RaUserMenu-userButton']")
     private WebElement profileButton;
 
@@ -56,8 +59,8 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(menuUsersButton))
                 .click();
         wait.until(ExpectedConditions.attributeContains(menuUsersButton,
-                "class",
-                "RaMenuItemLink-active"));
+                ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS));
         return new UsersPage(driver);
     }
 
@@ -65,8 +68,8 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(menuTaskStatusesButton))
                 .click();
         wait.until(ExpectedConditions.attributeContains(menuTaskStatusesButton,
-                "class",
-                "RaMenuItemLink-active"));
+                ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS));
         return new TaskStatusesPage(driver);
     }
 
@@ -74,8 +77,8 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(menuLabelsButton))
                 .click();
         wait.until(ExpectedConditions.attributeContains(menuLabelsButton,
-                "class",
-                "RaMenuItemLink-active"));
+                ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS));
         return new LabelsPage(driver);
     }
 
@@ -83,8 +86,8 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(menuTasksButton))
                 .click();
         wait.until(ExpectedConditions.attributeContains(menuTasksButton,
-                "class",
-                "RaMenuItemLink-active"));
+                ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS));
         return new TasksPage(driver);
     }
 }

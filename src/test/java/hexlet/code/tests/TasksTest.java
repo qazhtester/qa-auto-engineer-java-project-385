@@ -8,9 +8,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TasksTest extends BaseTest {
+
+    private static final String DEFAULT_ASSIGNEE_EMAIL = "michael@example.com";
+    private static final String STATUS_PUBLISHED = "Published";
 
     private TasksPage tasksPage;
 
@@ -22,15 +27,13 @@ public class TasksTest extends BaseTest {
 
     @Test
     public void testBoardDisplaysAllTasks() {
-        // Откройте список задач и убедитесь, что загружаются все записи.
-        tasksPage. verifyBoardVisible();
+        tasksPage.verifyBoardVisible();
         assertFalse(tasksPage.getAllTaskNames().isEmpty(),
                 "На доске нет ни одной задачи");
     }
 
     @Test
     public void testFilterByStatus() {
-        // Проверить фильтр по статусу и убедиться, что результаты обновляются.
         String status = "To Review";
         tasksPage.filterByStatus(status);
         tasksPage.verifyAllCardsInColumn(status);
@@ -41,7 +44,6 @@ public class TasksTest extends BaseTest {
 
     @Test
     public void testFilterByAssignee() {
-        // Проверить фильтр по исполнителю и убедиться, что результаты обновляются.
         List<String> before = tasksPage.getAllTaskNames();
         tasksPage.filterByAssignee("peter@outlook.com");
         tasksPage.verifyCardListChanged(before);
@@ -49,7 +51,6 @@ public class TasksTest extends BaseTest {
 
     @Test
     public void testFilterByLabel() {
-        // Проверить фильтр по меткам и убедиться, что результаты обновляются.
         List<String> before = tasksPage.getAllTaskNames();
         tasksPage.filterByLabel("bug");
         tasksPage.verifyCardListChanged(before);
@@ -60,15 +61,11 @@ public class TasksTest extends BaseTest {
         int countBefore = tasksPage.getAllTaskNames().size();
         TaskFormPage form = tasksPage.openCreateTaskForm();
 
-        // Проверьте, что форма создания отображается корректно
         form.verifyFormElementsVisible();
 
-        // Проверьте, что форма создания позволяет заполнить обязательные поля (название, статус, исполнитель).
-        // Сохраните карточку и убедитесь, что она появилась в нужной колонке
-        String assignee = "michael@example.com";
         String title = "Create Task";
-        String status = "Published";
-        tasksPage = form.createTaskAndGoToBoard(assignee, title, status);
+        String status = STATUS_PUBLISHED;
+        tasksPage = form.createTaskAndGoToBoard(DEFAULT_ASSIGNEE_EMAIL, title, status);
 
         assertTrue(tasksPage.isTaskPresent(title),
                 "Новая задача не появилась на доске");
@@ -80,13 +77,9 @@ public class TasksTest extends BaseTest {
 
     @Test
     public void testEditTask() {
-        // Создаём новую задачу
-        String initialAssignee = "michael@example.com";
         String initialTitle = "Edit Me";
-        String initialStatus = "Published";
-        createTask(initialAssignee, initialTitle, initialStatus);
+        createTask(initialTitle);
 
-        // Обновите данные существующей задачи и подтвердите, что изменения сохранены и отображаются.
         TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
         String newAssignee = "sarah@example.com";
         String newTitle = "Update Task";
@@ -100,13 +93,9 @@ public class TasksTest extends BaseTest {
 
     @Test
     public void testMoveTaskBetweenColumns() {
-        // Создаём новую задачу
-        String initialAssignee = "michael@example.com";
-        String initialTitle = "Edit Me";
-        String initialStatus = "Published";
-        createTask(initialAssignee, initialTitle, initialStatus);
+        String initialTitle = "Move Me";
+        createTask(initialTitle);
 
-        // Перетащите карточку в другой статус или используйте встроенные действия, затем проверьте, что отображаемый статус обновился.
         TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
         String newStatus = "To Be Fixed";
         tasksPage = form.editStatusAndGoToBoard(newStatus);
@@ -117,13 +106,9 @@ public class TasksTest extends BaseTest {
 
     @Test
     public void testDeleteTask() {
-        // Создаём задачу
-        String assignee = "michael@example.com";
         String title = "Delete Me";
-        String status = "Published";
-        createTask(assignee, title, status);
+        createTask(title);
 
-        // Удалите задачу и убедитесь, что она исчезла из списка и с доски.
         int countBefore = tasksPage.getAllTaskNames().size();
         TaskFormPage form = tasksPage.openEditTaskByName(title);
         tasksPage = form.deleteAndGoToBoard();
@@ -135,8 +120,8 @@ public class TasksTest extends BaseTest {
                 "Отображается удалённая задача " + title);
     }
 
-    private void createTask(String assignee, String title, String status) {
+    private void createTask(String title) {
         TaskFormPage form = tasksPage.openCreateTaskForm();
-        tasksPage = form.createTaskAndGoToBoard(assignee, title, status);
+        tasksPage = form.createTaskAndGoToBoard(TasksTest.DEFAULT_ASSIGNEE_EMAIL, title, TasksTest.STATUS_PUBLISHED);
     }
 }

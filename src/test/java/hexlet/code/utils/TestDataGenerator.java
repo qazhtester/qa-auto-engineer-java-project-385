@@ -2,7 +2,11 @@ package hexlet.code.utils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("java:S2245")
 public final class TestDataGenerator {
+
+    private TestDataGenerator() {
+    }
 
     public static String randomLogin() {
         return "user" + ThreadLocalRandom.current().nextInt(1000, 9999);

@@ -15,7 +15,7 @@ public class TaskStatusesPage extends HomePage {
 
     private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
     private static final String ROW_CHECKBOX_CSS = "tbody [type='checkbox']";
-    private static final String ALERT = ".MuiSnackbarContent-message";
+    private static final String ALERT_CSS = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement statusesTable;
@@ -66,15 +66,15 @@ public class TaskStatusesPage extends HomePage {
     }
 
     public void verifySuccessRowDeleteMessage() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT), "Element deleted"));
+                By.cssSelector(ALERT_CSS), "Element deleted"));
     }
 
     public void verifySuccessSomeDeleteMessage(int numberRows) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT), numberRows + " elements deleted"));
+                By.cssSelector(ALERT_CSS), numberRows + " elements deleted"));
     }
 
     public void verifySuccessAllStatusesDelete(int numberRows) {

@@ -13,7 +13,7 @@ public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
 
-    public BasePage(WebDriver driver) {
+    protected BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         PageFactory.initElements(driver, this);
@@ -21,14 +21,14 @@ public abstract class BasePage {
 
     protected void typeText(WebElement element, String text) {
         wait.until(ExpectedConditions.visibilityOf(element));
-        InputHelper.inputValue(element, text);
+        InputHelper.inputValue(driver, element, text);
     }
 
     protected void checkVisibility(WebElement element, String elementName) {
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
         } catch (TimeoutException e) {
-            throw new RuntimeException("Form element was not visible: " + elementName, e);
+            throw new IllegalStateException("Form element was not visible: " + elementName, e);
         }
     }
 }
