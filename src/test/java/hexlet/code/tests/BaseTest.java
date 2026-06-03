@@ -30,7 +30,7 @@ public abstract class BaseTest {
     @BeforeEach
     public void setupTest() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless", "--no-sandbox");
+        options.addArguments("--no-sandbox", "--headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
